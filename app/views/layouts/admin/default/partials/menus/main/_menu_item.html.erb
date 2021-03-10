@@ -1,0 +1,46 @@
+<% if item[:link] == 'label' %>
+	<li class="<%= item[:options][:class] %>"><%= item[:name] %></li>
+<% else %>
+	<li class="<%= 'active' if (item[:link][0] != '#') && (request.env['REQUEST_URI'][eval(item[:link])] != nil) %>">
+		
+		
+		<%
+			classes = []
+			if item[:sub]
+				classes.push('accordion-toggle')
+				class_menu_open = 'menu-open'
+				
+				item[:sub].each do |item|
+					if (item[:link][0] != '#') && (!request.env['REQUEST_URI'][eval(item[:link])].nil?) && (!classes.include?(class_menu_open))
+						classes.push(class_menu_open)
+					end
+				end
+			end
+		%>
+		
+		<%= link_to(eval(item[:link]), class: classes.join(' ')) do %>
+			<% if item[:options][:icon] %>
+				<span class="<%= item[:options][:icon] %>"></span>
+			<% end %>
+			<span class="sidebar-title"><%= item[:name] %></span>
+			
+			<% if item[:sub] %>
+				<span class="caret"></span>
+			<% end %>
+			
+			<% if item[:options][:tray] %>
+                <span class="sidebar-title-tray">
+                    <span class="label label-xs bg-primary"><%= eval(item[:options][:tray]) %></span>
+                </span>
+			<% end %>
+		<% end %>
+		
+		<% if item[:sub] %>
+			<ul class="nav sub-nav">
+				<% item[:sub].each do |item| %>
+					<%= render 'layouts/admin/default/partials/menus/main/menu_item', item: item %>
+				<% end %>
+			</ul>
+		<% end %>
+	</li>
+<% end %>

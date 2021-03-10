@@ -1,0 +1,20 @@
+<%
+   content[:class] ||= ''
+   content[:blocks] ||= []
+%>
+
+<div class="row <%= content[:class] %>">
+	<div class="col-xs-12">
+		<% unless content[:blocks].empty? %>
+			<% content[:blocks].each do |block| %>
+
+				<%
+				   block[:view] ||= 'default'
+				%>
+
+				<%= render_admin_block block[:name], block[:view], block[:content] %>
+
+			<% end %>
+		<% end %>
+	</div>
+</div>

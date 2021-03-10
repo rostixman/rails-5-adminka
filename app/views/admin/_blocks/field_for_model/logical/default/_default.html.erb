@@ -1,0 +1,53 @@
+<%
+
+   caption = content[:caption]
+   caption[:text] ||= ''
+
+   block = content[:block]
+   block[:content][:placeholder] ||= caption[:text]
+
+   block[:content][:checked_value]   ||= '1'
+   block[:content][:unchecked_value] ||= '0'
+   block[:content][:default_checked] ||= false
+
+   block[:content][:on]  ||= 'Да'
+   block[:content][:off] ||= 'Нет'
+
+   block[:content][:label_right] ||= ''
+
+   block[:content][:checked] = false
+   block[:content][:checked] = true if eval("content[:model].#{block[:content][:value]}.to_s") == block[:content][:checked_value].to_s
+   block[:content][:checked] ||= block[:content][:default_checked] if content[:action] == 'new'
+
+   id = "#{content[:model].class.to_s.underscore.downcase}_#{block[:content][:value]}"
+%>
+
+<div class="form-group">
+
+	<%= render_admin_block 'admin/_blocks/field_for_model/_label/', 'default', content, abs: true %>
+
+	<div class="col-md-9">
+		<div class="bs-component field">
+
+
+			<label class="switch switch-success block mt10">
+
+				<%= content[:f].check_box block[:content][:value].to_sym,
+				                          id: id,
+				                          checked: block[:content][:checked],
+				                          checked_value: block[:content][:checked_value],
+				                          unchecked_value: block[:content][:unchecked_value],
+				                          class: 'gui-logical' %>
+				<label for="<%= id %>"
+				       data-on="<%= block[:content][:on] %>"
+				       data-off="<%= block[:content][:off] %>"></label>
+
+				<% if block[:content][:label_right] %>
+					<span><%= block[:content][:label_right] %></span>
+				<% end %>
+			</label>
+
+			<%= render_admin_block 'admin/_blocks/field_for_model/_help_text/', 'default', block[:content], abs: true %>
+		</div>
+	</div>
+</div>

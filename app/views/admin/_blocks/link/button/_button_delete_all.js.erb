@@ -1,0 +1,122 @@
+var modal_button_delete_all = function() {
+	// init
+	var button_delete_all_class = '.button_delete_all';
+	var modal_class = '#simple-modal';
+
+	var button_delete_all = $(button_delete_all_class);
+	var modal = $(modal_class);
+	var modal_icon = modal.find('.panel-icon i');
+	var modal_title = modal.find('.panel-title');
+	var modal_body = modal.find('.panel-body');
+	var action_success = modal.find('.action_success');
+	var action_cancel = modal.find('.action_cancel');
+
+	// button success
+	button_delete_all.on('click', function(e) {
+		var count = $('input[type="checkbox"]:checked', window.data_table.rows().nodes()).length;
+
+		modal_icon.addClass('octicon octicon-trashcan');
+		modal_title.text('Внимание!');
+		modal_body.html('Вы уверены, что хотите удалить все <span class="text-danger fwb">(' + count +  ' шт.)</span> выделенные элементы?');
+		e.preventDefault();
+		e.stopPropagation();
+
+		var _this = $(this);
+
+		// magnificPopup init
+		$.magnificPopup.open({
+			removalDelay: 500, //delay removal by X to allow out-animation,
+			items: {
+				src: modal_class
+			},
+			overflowY: 'hidden', //
+			callbacks: {
+				beforeOpen: function(e) {
+					this.st.mainClass = _this.attr('data-effect');
+				},
+				afterClose: function(e) { }
+			},
+			midClick: true
+		});
+	});
+
+
+	action_success.on('click', function(e){
+		e.preventDefault();
+
+		setTimeout(function(){
+
+			var rows = window.data_table.rows().nodes();
+			$('input[type="checkbox"]:checked', rows).each(function(){
+				var _this = $(this);
+				var tr = _this.parents('tr');
+				var btn_remove = tr.find('.btn-remove[data-method="delete"]');
+				var url = btn_remove.prop('href').replace(".html",".json");
+
+				xhr = $.ajax({
+					url: url,
+					type: btn_remove.data('method'),
+					dataType: 'json',
+					data: { agree: true },
+					beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))}
+				}).done(function(result) {
+					tr.addClass('will-delete');
+					tr.find('.action a').prop('disabled', 'disabled');
+
+					setTimeout(function(){
+						var td = tr.find('td');
+						var height = td.height();
+						td.height(height)
+							.css('border', 0)
+							.text('')
+							.animate({padding: '0px', height: 0}, {duration: 200})
+							.promise()
+							.done(function(){
+								window.data_table.row(tr).remove().draw( false );
+							});
+
+					}, 250);
+
+				}).fail(function(data){
+					console.log('Произошла ошибка, обратитесь к системному администратору');
+					console.log(data);
+				})
+			}).promise().done( function() {
+				// magnificPopup init
+				$.magnificPopup.close({
+					items: {
+						src: modal_class
+					}
+				});
+
+				Ladda.stopAll();
+
+				var checker = $('table .th-checker');
+				checker.prop('checked', false);
+				checker.change();
+
+				new PNotify({
+					title: 'Удаление',
+					text: 'Записи удалены',
+					icon: 'icon-zoom2 icon-trashcan',
+					shadow: false,
+					opacity: 1,
+					addclass: 'stack_bar_top stack_bar_center',
+					type: 'info',
+					stack: { "dir1": "down",   "dir2": "right",    "push": "top", "spacing1": 0,  "spacing2": 0 },
+					width: '400px',
+					delay: 2500,
+					buttons: {
+						closer: false,
+						closer_hover: false,
+						sticker: true,
+						sticker_hover: true
+					}
+				});
+
+			});
+		}, 1000);
+	});
+};
+
+$(document).ready(modal_button_delete_all);

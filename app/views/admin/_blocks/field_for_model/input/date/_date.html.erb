@@ -1,0 +1,61 @@
+<%
+
+   caption = content[:caption]
+   caption[:text] ||= ''
+
+   block = content[:block]
+   block[:content][:placeholder] ||= caption[:text]
+   block[:content][:default_value] ||= ''
+   block[:content][:readonly] ||= false
+   block[:content][:format] ||= '%d.%m.%Y'
+   block[:content][:js] ||= 'date'
+   block[:content][:js_format] ||= 'dd.mm.yyyy'
+   block[:content][:language] ||= "closeText: 'Закрыть',
+		prevText: '&#x3C;Пред',
+		nextText: 'След&#x3E;',
+		currentText: 'Сегодня',
+		monthNames: ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
+		monthNamesShort: ['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'],
+		dayNames: ['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'],
+		dayNamesShort: ['вск','пнд','втр','срд','чтв','птн','сбт'],
+		dayNamesMin: ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],
+		weekHeader: 'Нед',
+		dateFormat: '#{block[:content][:js_format]}',
+		firstDay: 1,
+		isRTL: false,
+		showMonthAfterYear: false,
+		yearSuffix: ''"
+
+   value = eval("content[:model].#{block[:content][:value]}")
+   value = value.strftime(block[:content][:format]) unless value.nil?
+   value ||= block[:content][:default_value]
+
+
+   id = "#{content[:model].class.to_s.underscore.downcase}__#{block[:content][:value]}"
+%>
+
+<div class="form-group">
+
+	<%= render_admin_block 'admin/_blocks/field_for_model/_label/', 'default', content, abs: true %>
+
+	<div class="col-md-9">
+		<div class="bs-component field">
+
+			<!-- FIELD -->
+			<%= content[:f].text_field block[:content][:value].to_sym,
+			                 class: 'gui-input',
+			                 value: value,
+			                 id: id,
+			                 readonly: block[:content][:readonly],
+			                 placeholder: block[:content][:placeholder] %>
+
+			<%= render_admin_block 'admin/_blocks/field_for_model/_tooltip/', 'default', block[:content], abs: true %>
+			<%= render_admin_block 'admin/_blocks/field_for_model/_help_text/', 'default', block[:content], abs: true %>
+		</div>
+	</div>
+</div>
+
+<%= inline_js(render "admin/_blocks/field_for_model/input/date/#{block[:content][:js]}.js.erb",
+                     id: id,
+                     content: content,
+                     block: block) %>

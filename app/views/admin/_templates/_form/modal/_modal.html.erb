@@ -1,0 +1,65 @@
+<% configuration ||= @configuration %>
+
+<% if configuration.nil? %>
+	<p>Конфигурационный файл не найден</p>
+<% else %>
+	<%
+	   content[:object] ||= @object
+	   content[:action] ||= ''
+	   content[:modal_icon] ||= 'octicon octicon-pencil'
+	   content[:modal_title] ||= content[:panel_title]
+
+	   content[:footer_action_block_1] ||= {
+			   visible: { roles: [], condition: '', actions: [] },
+			   block: {
+					   name: 'link',
+					   view: 'button',
+					   content: {
+							   text: 'Сохранить',
+							   link: '#',
+							   router: false,
+							   class: 'btn btn-success ladda-button like-jquery-validate-submit-modal'
+					   }
+			   }
+	   }
+
+	   content[:footer_action_block_2] ||= {
+			   visible: { roles: [], condition: '', actions: [] },
+			   block: {
+					   name: 'link',
+					   view: 'button',
+					   content: {
+							   text: 'Закрыть',
+							   link: 'javascript:void(0);',
+							   router: false,
+							   class: 'btn btn-default btn_modal_cancel',
+					           data: {'modal-target' => 'main-modal'}
+					   }
+			   }
+	   }
+
+	   content[:footer_actions] ||= [content[:footer_action_block_1], content[:footer_action_block_2]]
+
+	   content[:panel_body_classes] ||= 'pn'
+	   content[:modal_body] ||= render_admin_block('form_for_model', 'default', {
+			                                               class: 'form-horizontal group-border stripped',
+			                                               body_class: '',
+			                                               turbobust: true,
+			                                               multipart: true,
+			                                               remote: true,
+			                                               fields: configuration.form_fields,
+			                                               model: content[:object],
+			                                               action: content[:action],
+			                                               footer: content[:footer_actions]
+	                                               })
+	%>
+
+	<%
+	   content_for :modal_icon, content[:modal_icon]
+	   content_for :modal_title, content[:modal_title]
+	   content_for :panel_body_classes, content[:panel_body_classes]
+	%>
+
+	<%= content[:modal_body].html_safe %>
+
+<% end %>

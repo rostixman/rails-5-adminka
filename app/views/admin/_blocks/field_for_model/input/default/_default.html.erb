@@ -1,0 +1,31 @@
+<%
+
+   caption = content[:caption]
+   caption[:text] ||= ''
+
+   block = content[:block]
+   block[:content][:placeholder] ||= caption[:text]
+   block[:content][:default_value] ||= ''
+
+   value = eval("content[:model].#{block[:content][:value]}")
+   value ||= block[:content][:default_value]
+%>
+
+<div class="form-group">
+
+	<%= render_admin_block 'admin/_blocks/field_for_model/_label/', 'default', content, abs: true %>
+
+	<div class="col-md-9">
+		<div class="bs-component field">
+
+			<!-- FIELD -->
+			<%= content[:f].text_field block[:content][:value].to_sym,
+			                 class: 'gui-input',
+			                 value: value,
+			                 placeholder: block[:content][:placeholder] %>
+
+			<%= render_admin_block 'admin/_blocks/field_for_model/_tooltip/', 'default', block[:content], abs: true %>
+			<%= render_admin_block 'admin/_blocks/field_for_model/_help_text/', 'default', block[:content], abs: true %>
+		</div>
+	</div>
+</div>

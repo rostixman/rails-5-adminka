@@ -1,0 +1,311 @@
+// PNotify icon
+.stack_bar_top {
+    margin: 30px auto 0;
+}
+.ui-pnotify-icon span {
+    display: block;
+    position: absolute;
+    top: 50%;
+    margin-top: -30px;
+}
+
+.ui-pnotify-title {
+    padding-left: 50px;
+    font-weight: bold;
+}
+
+.ui-pnotify-text {
+    margin-left: 50px;
+}
+
+.admin-form .prepend-icon .field_with_errors > input,
+.admin-form .prepend-icon .field_with_errors > textarea {
+    padding-left: 36px!important;
+}
+
+
+.mr0 {
+    margin-right: 0!important;
+}
+
+
+input[type="checkbox"]:focus + span.checkbox {
+    border-color: #DDD!important;
+}
+input[type="checkbox"]:checked + span.checkbox {
+    border-color: #37bc9b!important;
+}
+
+table.dataTable thead {
+    th[class*=sorting] {
+        background-position: center left!important;
+        padding-left: 25px!important;
+    }
+    th, td {
+        &.checker {
+            width: 22px!important;
+            padding: 10px!important;
+
+            label {
+                margin-right: 0!important;
+            }
+        }
+
+        &.id {
+            width: 40px;
+        }
+    }
+}
+
+table {
+	
+	th {
+		&.column {
+			vertical-align: middle!important;
+		}
+	}
+	
+	th, td {
+		&.checker {
+			width: 22px!important;
+			padding: 10px!important;
+			vertical-align: middle!important;
+
+			label {
+				margin-right: 0!important;
+			}
+		}
+
+		&.id {
+			width: 40px;
+		}
+
+		&.action {
+			width: 30px!important;
+		}
+	}
+}
+
+.dataTables_filter input {
+    width: auto!important;
+}
+
+@media only screen and (max-width: 815px) {
+
+	.dataTables_info {
+		width: 100%!important;
+		padding-bottom: 10px!important;
+		display: block!important;
+		float: none!important;
+		clear: both!important;
+		white-space: normal!important;
+	}
+	.dataTables_paginate .paging_simple_numbers {
+		display: block!important;
+		clear: both!important;
+		float: none!important;
+	}
+
+	.dt-panelmenu {
+		.dataTables_length {
+			width: 100%;
+			padding-bottom: 15px;
+			display: none;
+		}
+
+		.dataTables_filter {
+			width: 100%;
+			display: block;
+
+		}
+	}
+
+    .dataTables_paginate {
+        .previous, .next {
+            display: none;
+        }
+    }
+
+
+	.dt-panelfooter {
+		text-align: center!important;
+	}
+
+	.dataTables_paginate.paging_simple_numbers {
+		text-align: center!important;
+	}
+}
+
+.data-table-wrapper {
+	width: 100%;
+	overflow-y: scroll;
+	position: relative;
+}
+
+table tr.will-delete {
+    opacity: 0.3;
+}
+
+.entity-files__input {
+	cursor: pointer;
+}
+
+.entity-file__image {
+	position: relative;
+
+	.entity-file__toolbar {
+		position: absolute;
+		top: 5px;
+		left: 5px;
+		background: white;
+		width: 98%;
+		opacity: 1;
+		visibility: visible;
+		padding: 5px 5px 10px;
+		-webkit-transition: all .2s ease-in-out;
+		-moz-transition: all .2s ease-in-out;
+		-ms-transition: all .2s ease-in-out;
+		-o-transition: all .2s ease-in-out;
+		transition: all .2s ease-in-out;
+		text-align: right;
+	}
+
+	.img-wrap {
+		width: 100%;
+		height: 150px!important;
+		display: block!important;
+		text-align: center;
+		background-size: cover;
+		background-position: center center;
+		background-repeat: no-repeat;
+	}
+
+	.progress-circle {
+		padding-top: 43px;
+	}
+
+	&:hover {
+		.entity-file__toolbar {
+			opacity: 1;
+			visibility: visible;
+		}
+	}
+}
+
+.custom-checked {
+	margin-right: 0!important;
+
+	.checkbox {
+		min-height: 20px;
+		height: 20px;
+	}
+}
+
+.custom-radio {
+	margin-right: 0!important;
+
+	.radio {
+		min-height: 20px;
+		height: 20px;
+		padding-top: 0;
+	}
+}
+
+.file_link {
+	background-repeat: no-repeat!important;
+	background-position: center center!important;
+	background-size: auto!important;
+
+	&[href$=ai] { background-image: asset-url('documents/ai.png')!important }
+	&[href$=avi] { background-image: asset-url('documents/avi.png')!important }
+	&[href$=bat] { background-image: asset-url('documents/bat.png')!important }
+	&[href$=bin] { background-image: asset-url('documents/bin.png')!important }
+	&[href$=blank] { background-image: asset-url('documents/blank.png')!important }
+	&[href$=cad] { background-image: asset-url('documents/cad.png')!important }
+	&[href$=com] { background-image: asset-url('documents/com.png')!important }
+	&[href$=css] { background-image: asset-url('documents/css.png')!important }
+	&[href$=csv] { background-image: asset-url('documents/csv.png')!important }
+	&[href$=dat] { background-image: asset-url('documents/dat.png')!important }
+	&[href$=dll] { background-image: asset-url('documents/dll.png')!important }
+	&[href$=doc] { background-image: asset-url('documents/doc.png')!important }
+	&[href$=docx] { background-image: asset-url('documents/docx.png')!important }
+	&[href$=exe] { background-image: asset-url('documents/exe.png')!important }
+	&[href$=html] { background-image: asset-url('documents/html.png')!important }
+	&[href$=js] { background-image: asset-url('documents/js.png')!important }
+	&[href$=log] { background-image: asset-url('documents/log.png')!important }
+	&[href$=mkv] { background-image: asset-url('documents/mkv.png')!important }
+	&[href$=mp3] { background-image: asset-url('documents/mp3.png')!important }
+	&[href$=mp4] { background-image: asset-url('documents/mp4.png')!important }
+	&[href$=mpeg] { background-image: asset-url('documents/mpeg.png')!important }
+	&[href$=msi] { background-image: asset-url('documents/msi.png')!important }
+	&[href$=otp] { background-image: asset-url('documents/otp.png')!important }
+	&[href$=pdf] { background-image: asset-url('documents/pdf.png')!important }
+	&[href$=php] { background-image: asset-url('documents/php.png')!important }
+	&[href$=ppt] { background-image: asset-url('documents/ppt.png')!important }
+	&[href$=pptx] { background-image: asset-url('documents/pptx.png')!important }
+	&[href$=psd] { background-image: asset-url('documents/psd.png')!important }
+	&[href$=ram] { background-image: asset-url('documents/ram.png')!important }
+	&[href$=rar] { background-image: asset-url('documents/rar.png')!important }
+	&[href$=sql] { background-image: asset-url('documents/sql.png')!important }
+	&[href$=txt] { background-image: asset-url('documents/txt.png')!important }
+	&[href$=xls] { background-image: asset-url('documents/xls.png')!important }
+	&[href$=xlsx] { background-image: asset-url('documents/xlsx.png')!important }
+	&[href$=xml] { background-image: asset-url('documents/xml.png')!important }
+	&[href$=zip] { background-image: asset-url('documents/zip.png')!important }
+}
+
+.btn-default.ladda-button {
+	.ladda-spinner {
+		div > div > div {
+			background: #000!important;
+		}
+	}
+}
+
+#main-modal {
+	.modal__edit-btn {
+		display: none;
+	}
+	.modal__new-btn {
+		display: none;
+	}
+}
+
+body .admin-form .select2.select2-container .select2-selection--single {
+	height: 42px;
+	
+	.select2-selection {
+		height: 42px;
+	}
+	.select2-selection__rendered {
+		height: 40px;
+		line-height: 40px;
+	}
+	.select2-selection__arrow {
+		height: 40px;
+		width: 50px;
+		background: rgba(245, 245, 245, 0.75);
+		border-left: 1px solid #DDD;
+	}
+	.select2-selection__clear {
+		margin-right: 30px;
+		width: 50px;
+		text-align: center;
+		background: rgba(245, 245, 245, 0.75);
+		border-left: 1px solid #DDD;
+	}
+}
+
+.stack_bar_center {
+	right: auto;
+	left: 50%!important;
+	margin-left: -200px;
+}
+
+.ui-datepicker {
+	z-index: 9999!important;
+}
+
+.hasDatepicker {
+	cursor: pointer;
+}

@@ -1,0 +1,58 @@
+var pnotify_default__init = function() {
+
+	var Stacks = {
+		stack_top_right:    { "dir1": "down",   "dir2": "left",     "push": "top", "spacing1": 10, "spacing2": 10 },
+		stack_top_left:     { "dir1": "down",   "dir2": "right",    "push": "top", "spacing1": 10, "spacing2": 10 },
+		stack_bottom_left:  { "dir1": "right",  "dir2": "up",       "push": "top", "spacing1": 10, "spacing2": 10 },
+		stack_bottom_right: { "dir1": "left",   "dir2": "up",       "push": "top", "spacing1": 10, "spacing2": 10 },
+		stack_bar_top:      { "dir1": "down",   "dir2": "right",    "push": "top", "spacing1": 0,  "spacing2": 0 },
+		stack_bar_bottom:   { "dir1": "up",     "dir2": "right",                   "spacing1": 0,  "spacing2": 0 },
+
+		stack_context:      { "dir1": "down",   "dir2": "left", "context": $("#stack-context") }
+	};
+
+	<% content[:messages].each do |message|%>
+
+		<% if message.is_a? Hash %>
+
+			<%
+				message['title'] ||= ''
+				message['modal'] ||= ''
+				message['icon'] ||= ''
+				message['shadow'] ||= false
+				message['opacity'] ||= 1
+				message['addclass'] ||= 'stack_bar_top stack_bar_center'
+				message['stack'] ||= 'stack_bar_top'
+				message['type'] ||= 'success'
+				message['width'] ||= '400px'
+				message['delay'] ||= '2500'
+				message['text'] ||= 'Приносим извнинения произошла не придвиденная ошибка'
+			%>
+
+			setTimeout(function(){
+				// Create new Notification
+				new PNotify({
+					title: '<%= message['title'] %>',
+					text: '<%= message['text'] %>',
+					icon: '<%= message['icon'] %>',
+					shadow: <%= message['shadow'] %>,
+					opacity: <%= message['opacity'] %>,
+					addclass: '<%= message['addclass'] %>',
+					type: '<%= message['type'] %>',
+					stack: Stacks['<%= message['stack'] %>'],
+					width: '<%= message['width'] %>',
+					delay: <%= message['delay'] %>,
+					buttons: {
+						closer: false,
+						closer_hover: false,
+						sticker: true,
+						sticker_hover: true
+					}
+				});
+			}, 500);
+		<% end %>
+	<% end %>
+
+};
+
+pnotify_default__init();

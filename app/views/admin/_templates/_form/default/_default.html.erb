@@ -1,0 +1,76 @@
+<% configuration = @configuration %>
+
+<% if configuration.nil? %>
+	<p>Конфигурационный файл не найден</p>
+<% else %>
+	<%
+	   content[:action] ||= ''
+	   content[:panel_title] ||= ''
+	   content[:title] ||= configuration.signatures[:edit_element]
+	   content[:breadcrumbs] ||= [[configuration.signatures[:elements], configuration.links[:elements]],
+	                              [configuration.signatures[:edit_element], 'blank']]
+	   content[:object] ||= @object
+	   content[:footer_action_block_1] ||= {
+		   visible: { roles: [], condition: '', actions: [] },
+		   block: {
+			   name: 'link',
+			   view: 'button',
+			   content: {
+				   text: 'Сохранить',
+				   link: '#',
+				   router: false,
+				   class: 'btn btn-success ladda-button like-jquery-validate-submit'
+			   }
+		   }
+	   }
+	   content[:footer_action_block_2] ||= {
+		   visible: { roles: [], condition: '', actions: [] },
+		   block: {
+			   name: 'link',
+			   view: 'button',
+			   content: {
+				   text: 'Отмена',
+				   link: configuration.links[:elements],
+				   turbolink: true,
+				   router: true,
+				   class: 'btn btn-info ladda-button'
+			   }
+		   }
+	   }
+	   content[:footer_actions] ||= [content[:footer_action_block_1], content[:footer_action_block_2]]
+	   content[:panel_blocks] ||= [{
+		                               name: 'form_for_model',
+		                               content: {
+			                               class: 'form-horizontal group-border stripped',
+			                               body_class: '',
+			                               multipart: true,
+			                               turboboost: true,
+			                               remote: true,
+			                               fields: configuration.form_fields,
+			                               model: content[:object],
+			                               action: content[:action],
+			                               footer: content[:footer_actions]
+		                               }
+	                               }]
+
+	   content[:row_blocks] ||= [{
+		                             name: 'panel',
+		                             view: 'default',
+		                             content: {
+			                             class: '',
+			                             body_class: 'pn',
+			                             title: content[:panel_title],
+			                             blocks:content[:panel_blocks]
+		                             }
+	                             }]
+	%>
+
+	<%
+	   content_for :title, content[:title]
+	   breadcrumb :general, content[:breadcrumbs]
+	%>
+
+	<%= render_admin_block 'row','default', {
+		blocks: content[:row_blocks]
+	} %>
+<% end %>

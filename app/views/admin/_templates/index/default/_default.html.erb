@@ -1,0 +1,112 @@
+<% configuration ||= content[:configuration] %>
+
+<% if configuration.nil? %>
+	<p>Конфигурационный файл не найден</p>
+<% else %>
+	<%
+	   content[:title] ||= configuration.signatures[:elements]
+
+	   content[:object] ||= @objects
+	   content[:table_checker] = true if content[:table_checker].nil?
+	   content[:breadcrumbs] ||= [[content[:title], 'blank']]
+	   content[:first_row_block_1] ||= {
+		   name: 'link',
+		   view: 'button',
+		   content: {
+			   text: "<i class=\"octicon octicon-plus\"></i>&nbsp;&nbsp; #{configuration.signatures[:add_element]}",
+			   link: configuration.links[:create_element],
+			   router: true,
+			   turbolinks: true,
+			   class: 'btn ladda-button btn-system'
+		   }
+	   }
+	   content[:first_row_block_2] ||= {
+		   name: 'link',
+		   view: 'button',
+		   content: {
+			   text: "<i class=\"octicon octicon-plus\"></i>&nbsp;&nbsp; Удалить выбранное",
+			   link: '#',
+			   router: false,
+			   class: 'btn btn-danger btn-checker button_delete_all',
+			   style: 'display: none;',
+			   js: 'button_delete_all'
+		   }
+	   }
+	   content[:first_row_blocks] ||= [content[:first_row_block_1], content[:first_row_block_2]]
+
+	   content[:action_block_1] ||= {
+		   name: 'link',
+		   view: 'button',
+		   content: {
+			   text: '<i class="fa fa-pencil"></i>',
+			   link: "#{configuration.links[:edit_element]}(content[:row])",
+			   router: true,
+			   turbolinks: true,
+			   class: 'btn btn-xs ladda-button btn-system',
+			   exclusion: []
+		   }
+	   }
+	   content[:action_block_2] ||= {
+		   name: 'link',
+		   view: 'button',
+		   content: {
+			   text: '<i class="octicon octicon-x"></i>',
+			   link: "#{configuration.links[:destroy_element]}(content[:row], format: :html)",
+			   router: true,
+			   method: :delete,
+			   class: 'btn btn-xs btn-danger btn-remove btn-remove-in-modal ladda-button',
+			   exclusion: []
+		   }
+	   }
+
+	   content[:actions] ||= [content[:action_block_1], content[:action_block_2]]
+
+	   content[:panel_blocks] ||= [{
+		                               name: 'table_for_model',
+		                               view: 'data_table',
+		                               content: {
+			                               checker: content[:table_checker],
+			                               columns: configuration.table_properties,
+			                               id: 'table-user_roles',
+			                               class: 'table table-hover no-more-tables', # no-more-tables для адаптивной таблицы
+			                               rows: content[:object],
+			                               data_attr: {
+				                               sort_disable: '[0, 1]',
+				                               sort_column: 2,
+				                               sort_default: 'asc',
+				                               display_length: 25
+			                               },
+			                               actions: content[:actions]
+		                               }
+	                               }]
+	   content[:second_row_blocks] ||= [{
+		                                    name: 'panel',
+		                                    content: {
+			                                    class: '',
+			                                    body_class: 'pn',
+			                                    title: content[:title],
+			                                    blocks: content[:panel_blocks]
+		                                    }
+	                                    }]
+
+	%>
+
+	<%
+	   content_for :title, content[:title]
+	   breadcrumb :general, content[:breadcrumbs]
+	%>
+
+	<%= render_admin_block 'row', 'default', {
+		class: 'mb10',
+		blocks: content[:first_row_blocks]
+	} %>
+
+	<%= render_admin_block 'row', 'default', {
+		blocks: content[:second_row_blocks]
+	} %>
+
+	<%= render_admin_block 'pnotify', 'default', {
+			messages: [flash[:message]]
+	} %>
+
+<% end %>

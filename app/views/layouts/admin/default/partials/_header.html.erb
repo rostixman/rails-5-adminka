@@ -1,0 +1,34 @@
+<!-- Start: Header -->
+<header class="navbar navbar-fixed-top bg-system">
+    <div class="navbar-branding dark bg-system">
+        <a class="navbar-brand" href="">
+	        <%= raw ADMIN_SETTING.logo %>
+        </a>
+        <span id="toggle_sidemenu_l" class="ad ad-lines"></span>
+    </div>
+    <ul class="nav navbar-nav navbar-left">
+
+        <li>
+	        <%= link_to raw('<span class="fa fa-eye fs18"></span>'), site_root_path, target: '_blank' %>
+        </li>
+    </ul>
+	<ul class="nav navbar-nav navbar-right">
+		<li class="menu-merge mr15">
+			<%= link_to edit_admin_user_path(current_user.id), class: 'fw600 p15' do %>
+				<% avatar = entity_file(current_user, 'avatar', 'first') %>
+				<%= image_tag avatar.try(:file).try(:fill_128x128).try(:url), :class => 'mw30 br64 ', :alt => 'avatar' unless avatar.nil? %>
+				<span class="hidden-xs pl15" style="<%= 'line-height: 30px;'  if avatar.nil? %>">
+					<%= current_user.email %>
+				</span>
+			<% end %>
+		</li>
+		<li>
+			<div class="navbar-btn btn-group">
+				<%= link_to destroy_user_session_path, class: 'btn btn-sm', style: 'border-radius: 2px' do %>
+					<span class="fa fa-power-off"></span>
+				<% end %>
+			</div>
+		</li>
+	</ul>
+</header>
+<!-- End: Header -->

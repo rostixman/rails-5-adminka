@@ -1,0 +1,21 @@
+<%
+   content[:row] ||= ''
+   content[:text] ||= ''
+   content[:blocks] ||= []
+%>
+
+<div class="btn-group">
+	<a href="#" type="button" class="btn btn-dark dropdown-toggle btn-xs" data-toggle="dropdown" aria-expanded="false">
+		<%= raw content[:text] %>
+	</a>
+	<ul class="dropdown-menu" role="menu">
+		<% content[:blocks].each do |block| %>
+			<%
+			   block[:content][:row] = content[:row]
+			%>
+			<li>
+				<%= render_admin_block block[:name], block[:view], block[:content] %>
+			</li>
+		<% end %>
+	</ul>
+</div>

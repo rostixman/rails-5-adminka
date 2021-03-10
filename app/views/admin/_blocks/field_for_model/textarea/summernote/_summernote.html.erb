@@ -1,0 +1,47 @@
+<%
+   caption = content[:caption]
+   caption[:text] ||= ''
+
+   block = content[:block]
+   block[:content][:placeholder] ||= caption[:text]
+   block[:content][:default_value] ||= ''
+   block[:content][:size] ||= '50x5'
+   block[:content][:focus] ||= false
+   block[:content][:height] ||= 150
+   block[:content][:toolbar] ||= "[ ['para', ['style']],
+									['font', ['bold', 'italic', 'underline', 'clear']],
+									['color', ['color']],
+									['para', ['ul', 'ol', 'paragraph']],
+									['view', ['fullscreen', 'codeview']],
+									['help', ['help']]
+								]"
+
+   value = eval("content[:model].#{block[:content][:value]}")
+   value ||= block[:content][:default_value]
+
+   id = "#{content[:model].class.to_s.underscore.downcase}__#{block[:content][:value]}"
+%>
+
+<div class="form-group">
+
+	<%= render_admin_block 'admin/_blocks/field_for_model/_label/', 'default', content, abs: true %>
+
+	<div class="col-md-9">
+		<div class="bs-component field">
+			<!-- FIELD -->
+			<%= content[:f].text_area block[:content][:value].to_sym, size: block[:content][:size],
+			                          id: id,
+			                          class: 'summernote textarea_summernote',
+			                          value: value,
+			                          placeholder: block[:content][:placeholder] %>
+
+			<%= render_admin_block 'admin/_blocks/field_for_model/_tooltip/', 'default', block[:content], abs: true %>
+			<%= render_admin_block 'admin/_blocks/field_for_model/_help_text/', 'default', block[:content], abs: true %>
+		</div>
+	</div>
+</div>
+
+
+<%= inline_js(render('admin/_blocks/field_for_model/textarea/summernote/summernote.js.erb',
+                     id: id,
+                     content: block[:content])) %>

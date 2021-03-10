@@ -1,0 +1,30 @@
+<%
+   content[:link] ||= '#'
+   content[:router] ||= false
+   content[:turbolinks] ||= false
+   content[:row_class] ||= ''
+   content[:method] ||= ''
+   content[:style] ||= ''
+   content[:class] ||= ''
+   content[:modal] ||= ''
+   content[:attrs] ||= ''
+   content[:default_data] ||= {
+		   style: 'slide-down',
+		   effect: 'mfp-slideDown',
+		   turbolinks: content[:turbolinks],
+		   row_class: content[:row_class]
+   }
+   content[:data] ||= {}
+%>
+
+<%= link_to (content[:router] ? eval(content[:link]) : content[:link]),
+            data: content[:default_data].merge(content[:data]),
+            method: content[:method],
+            style: content[:style],
+            class: content[:class] do %>
+	<span class="ladda-label"><%= raw content[:text] %></span>
+<% end %>
+
+<% unless content[:js].nil? %>
+	<%= inline_js(render("admin/_blocks/link/button/#{content[:js]}.js.erb")) %>
+<% end %>

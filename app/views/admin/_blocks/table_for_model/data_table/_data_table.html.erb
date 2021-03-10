@@ -1,0 +1,105 @@
+<%
+   content[:id] ||= ''
+   content[:class] ||= ''
+   content[:data_attr] ||= []
+   content[:checker] ||= false
+   content[:columns] ||= []
+   content[:rows] ||= []
+   content[:actions] ||= []
+%>
+
+<table id="<%= content[:id] %>" class="data-table admin-form <%= content[:class] %>"
+       cellspacing="0"
+       width="100%"
+       <% if content[:data_attr].any? %>
+			<% content[:data_attr].each do |key, value| %>
+				data-<%= key.to_s %>="<%= value %>"
+			<% end %>
+		<% end %>
+	>
+	<thead>
+		<tr>
+
+			<% if content[:checker] %>
+				<th class="checker">
+					<label class="option option-system">
+						<input type="checkbox" name="checked" value="checked" class="th-checker">
+						<span class="checkbox mr0"></span>
+					</label>
+				</th>
+			<% end %>
+
+			<th class="action"></th>
+
+			<% content[:columns].each do |column| %>
+				<%
+				   # init
+				   column[:visible] ||= {}
+				   column[:visible][:roles] ||= []
+				   column[:visible][:condition] ||= []
+				%>
+
+				<% if (column[:visible][:roles].count == 0) ||
+					  (current_user.role? :admin) ||
+					  (column[:visible][:roles].include?(eval(":#{current_user.role.name}"))) ||
+					  (eval(column[:visible][:condition])) %>
+
+					<%
+					   # init
+					   column[:caption][:class] ||= []
+					   column[:caption][:text] ||= []
+					%>
+
+					<th class="<%= column[:caption][:class] %> column">
+						<%= raw column[:caption][:text] %>
+					</th>
+
+				<% end %>
+			<% end %>
+		</tr>
+	</thead>
+	<tbody>
+		<% content[:rows].each_with_index do |row, row_index| %>
+			<tr class="<%= row.table_row_color %> tr-<%= row.id %>">
+
+				<% if content[:checker] %>
+					<td class="checker">
+						<label class="option option-system">
+							<input type="checkbox" name="checked" value="checked" class="checker">
+							<span class="checkbox mr0"></span>
+						</label>
+					</td>
+				<% end %>
+
+				<td class="action">
+					<% content[:actions].each do |action| %>
+
+						<%
+						   action[:content][:row] = row
+						%>
+
+						<%= render_admin_block action[:name], action[:view], action[:content] %>
+					<% end %>
+				</td>
+
+				<% content[:columns].each_with_index do |column, column_index| %>
+
+					<% if (column[:visible][:roles].count == 0) ||
+						(current_user.role? :admin) ||
+						(column[:visible][:roles].include?(eval(":#{current_user.role.name}"))) ||
+						(eval(column[:visible][:condition])) %>
+
+						<td class="column" data-title="<%= raw column[:caption][:text] %>">
+							<%
+							   block = column[:block]
+							   block[:content][:row] = row
+							%>
+							<%= render_admin_block block[:name], block[:view], block[:content] %>
+						</td>
+
+					<% end %>
+				<% end %>
+			</tr>
+		<% end %>
+	</tbody>
+</table>

@@ -1,0 +1,37 @@
+<%
+   content[:caption] ||= {}
+   content[:caption][:text] ||= ''
+   content[:validates] ||= {}
+   content[:validates][:use_for] ||= {}
+   content[:validates][:use_for][:roles] ||= []
+   content[:validates][:use_for][:actions] ||= []
+   content[:validates][:use_for][:condition] ||= 'true'
+   content[:validates][:rules] ||= []
+%>
+
+<%
+   star = false
+   if ( # Roles #
+	    (content[:validates][:use_for][:roles].count == 0) ||
+	    (content[:validates][:use_for][:roles].include?( current_user.role.name.to_sym )) ||
+	    (current_user.role? :admin)
+	  ) && ( # Actions #
+		(content[:validates][:use_for][:actions].count == 0) ||
+		(content[:validates][:use_for][:actions].include?( content[:action].to_sym ))
+	  ) && ( # Condition #
+		eval( content[:validates][:use_for][:condition] )
+	  )
+
+	   star = true
+   end
+
+   if content[:validates][:rules].count == 0
+	
+	   star = false
+   end
+%>
+
+<label class="col-md-3 control-label" for="">
+	<!-- LABEL -->                       <!-- STAR -->
+	<%= raw(content[:caption][:text]) %> <%= raw '<span class="text-danger">*</span>' if star %>
+</label>

@@ -1,0 +1,30 @@
+<%
+		content[:js_init] ||= "beforeShow: function (input, inst) {
+			var newclass = 'admin-form';
+			var themeClass = $(this).parents('.admin-form').attr('class');
+			var smartpikr = inst.dpDiv.parent();
+			if (!smartpikr.hasClass(themeClass)) {
+				inst.dpDiv.wrap('<div class=\"' + themeClass + '\"></div>');
+			}
+		}"
+%>
+/**
+ * @desc инициализация функции
+ */
+var input_date__<%= id %>__init = function(){
+
+	/**
+	 * инициализиурем датапикер
+	 **/
+	$('#<%= id %>')
+			.timepicker({
+				<%= content[:js_init].html_safe %>
+			})
+			.on('change', function(){
+				$(this).valid();
+			})
+			.on('click', function(){
+				$(this).datepicker('show');
+			});
+};
+input_date__<%= id %>__init();

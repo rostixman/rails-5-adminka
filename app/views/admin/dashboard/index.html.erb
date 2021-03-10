@@ -1,0 +1,4 @@
+<% content_for :title, 'Рабочий стол'
+   breadcrumb :general, [['Рабочий стол', 'blank']] %>
+
+<%= render_admin_block 'pnotify', 'default', { messages: [flash[:message]] } %>

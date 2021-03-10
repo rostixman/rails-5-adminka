@@ -1,0 +1,43 @@
+<%
+   content[:object] ||= @object
+   content[:errors] ||= []
+%>
+
+
+<% unless content[:errors].empty? %>
+	<div class="alert alert-danger alert-dismissable mb30">
+		<p>Удаление записи <b><%= content[:object].id %></b> невозможно, так как она используется в следующих объектах:</p>
+	</div>
+
+	<table class="table mbn tc-med-1 tc-bold-last ">
+		<thead>
+			<tr>
+				<th>Название</th>
+				<th class="text-center">IDs</th>
+			</tr>
+		</thead>
+		<tbody>
+
+	<% content[:errors].each do |error| %>
+		 <% configuration = eval("#{error[:name].to_s}ModelConfiguration.new") %>
+			<tr>
+				<td style="min-width: 200px;">
+					<span class="fa fa-circle text-warning fs14 mr10"></span> <%= configuration.signatures[:elements] %>
+				</td>
+				<td>
+					<% error[:ids].each do |id| %>
+						<%
+						   sep = ', '
+						   if error[:ids].last == id; sep = '' end
+						   link = eval("#{configuration.links[:edit_element]}(id)")
+						%>
+						<%= link_to link, class: 'label label-rounded label-default' do %><%= id %><% end %>
+					<% end %>
+				</td>
+			</tr>
+	<% end %>
+
+
+		</tbody>
+	</table>
+<% end %>

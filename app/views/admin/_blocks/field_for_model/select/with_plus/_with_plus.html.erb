@@ -1,0 +1,58 @@
+<%
+   caption = content[:caption]
+   caption[:text] ||= ''
+
+   block = content[:block]
+   block[:content][:placeholder] ||= caption[:text]
+   block[:content][:default_value] ||= ''
+   block[:content][:multiple] ||= false
+   block[:content][:options] ||= []
+   block[:content][:new_url] ||= '#'
+   block[:content][:route] ||= false
+   block[:content][:new_url] = eval(block[:content][:new_url]) if block[:content][:route]
+   block[:content][:select2init] ||= "{ allowClear: true, placeholder: $(this).data('placeholder') }"
+
+   value = eval("content[:model].#{block[:content][:value]}")
+   value ||= block[:content][:default_value]
+
+   id = "#{content[:model].class.to_s.underscore.downcase}__#{block[:content][:value]}"
+%>
+<div class="form-group">
+
+	<%= render_admin_block 'admin/_blocks/field_for_model/_label/', 'default', content, abs: true %>
+
+	<div class="col-md-9">
+		<div class="bs-component field">
+			<div class="smart-widget sm-right smr-50">
+				<label class="field">
+					<!-- FIELD -->
+					<%= content[:f].select block[:content][:value].to_sym,
+					                       options_for_select( eval( block[:content][:options] ), value ),
+					                       { prompt: block[:content][:placeholder] },
+					                       { multiple: block[:content][:multiple],
+					                         id: id,
+					                         class: 'form-control select2 select2-form',
+					                         data: { placeholder: block[:content][:placeholder] }
+					                       } %>
+				</label>
+				<%= link_to block[:content][:new_url],
+				            class: 'ladda-button button btn-success modal__new-btn with-update-select',
+				            data: { effect: 'mfp-slideDown',
+				                    style: 'slide-down',
+				                    id: id,
+				                    value: block[:content][:value],
+				                    entity: content[:model].class.to_s } do %>
+					<span class="ladda-label">
+						<span class="octicon octicon-plus"></span>
+					</span>
+				<% end %>
+			</div>
+
+
+			<%= render_admin_block 'admin/_blocks/field_for_model/_help_text/', 'default', block[:content], abs: true %>
+		</div>
+	</div>
+</div>
+
+<%= inline_js( render('admin/_blocks/field_for_model/select/default/default.js.erb',
+                      id: id, content: block[:content]) )%>

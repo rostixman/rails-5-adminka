@@ -1,0 +1,7 @@
+<%
+   content[:prefix] ||= ''
+   content[:value] ||= ''
+   content[:format] ||= '%d.%m.%Y'
+   content[:postfix] ||= ''
+%>
+<%= "#{content[:prefix]}#{eval("#{content[:value]}.strftime('#{content[:format]}')")}#{content[:postfix]}" %>

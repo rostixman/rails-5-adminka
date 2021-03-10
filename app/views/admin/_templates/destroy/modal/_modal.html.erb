@@ -1,0 +1,54 @@
+<% configuration ||= @configuration %>
+
+<% if configuration.nil? %>
+	<p>Конфигурационный файл не найден</p>
+<% else %>
+	<%
+
+	   content[:object] ||= @object
+	   content[:relations_errors] ||= content[:object].relations_errors.count
+	   content[:modal_icon] ||= 'octicon octicon-trashcan'
+	   content[:modal_title] ||= 'Внимание'
+	   content[:modal_body] ||= "Вы уверены, что хотите удалить запись? <span class=\"fwb text-danger\">№ #{content[:object].id}</span>"
+
+	   content[:destroy_link] ||= "#{configuration.links[:destroy_element]}(content[:row], format: :json, agree: true)"
+
+	   content[:button_delete_success] ||= render_admin_block 'link', 'button', {
+		   text: 'Да',
+		   link: content[:destroy_link],
+		   router: true,
+		   method: :delete,
+		   class: 'btn btn-primary ladda-button button_delete_success',
+		   js: 'button_delete_success',
+		   row: content[:object],
+		   row_class: ".tr-#{content[:object].id}",
+		   exclusion: []
+	   }
+	%>
+
+	<%
+	   content_for :modal_icon, content[:modal_icon]
+	   content_for :modal_title, content[:modal_title]
+	%>
+
+
+	<%
+		# errors with relations
+		if content[:relations_errors] > 0
+			content[:modal_body] = render_admin_block 'relations_errors', 'default', {
+					object: content[:object],
+					errors: content[:object].relations_errors
+			}
+		end
+	%>
+
+	<%= raw content[:modal_body] %>
+
+
+	<% content_for :modal_footer do %>
+		<div class="panel-footer text-right">
+			<%= content[:button_delete_success] if content[:relations_errors] == 0 %>
+			<button class="btn btn_modal_cancel" type="button" data-modal-target="#main-modal"><%= (content[:relations_errors] == 0 ? 'Нет' : 'Закрыть') %></button>
+		</div>
+	<% end %>
+<% end %>

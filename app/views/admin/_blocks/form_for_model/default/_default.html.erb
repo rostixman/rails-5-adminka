@@ -1,0 +1,74 @@
+<%
+   content[:class] ||= ''
+   content[:multipart] ||= false
+   content[:fields] ||= []
+   content[:footer] ||= []
+   content[:turboboost] ||= false
+   content[:remote] ||= false
+
+   model_class = content[:model].class.name.underscore.downcase
+   form_model_class = "form_#{content[:model].class.name.underscore.downcase}"
+%>
+<%= form_for([:admin, content[:model]], turboboost: content[:turboboost],
+             remote: content[:remote], authenticity_token: true,
+             html: {
+		             class: "admin-form #{ content[:class] } #{ form_model_class }",
+                     multipart: content[:multipart],
+                     autocomplete: 'off'
+             }) do |f| %>
+
+	<div class="panel-body <%= content[:class] %>">
+
+		<%= render_admin_block 'admin/_blocks/field_for_model/_errors', 'default', { model: content[:model] }, abs: true %>
+
+		<% content[:fields].each do |field| %>
+			<%
+				field[:visible] ||= {}
+				field[:visible][:roles] ||= []
+				field[:visible][:actions] ||= []
+				field[:visible][:condition] ||= 'true'
+			%>
+
+			<% if ( # Roles #
+				    (field[:visible][:roles].count == 0) ||
+					(field[:visible][:roles].include?( current_user.role.name.to_sym )) ||
+					(current_user.role? :admin)
+				  ) && ( # Actions #
+				    (field[:visible][:actions].count == 0) ||
+					(field[:visible][:actions].include?( content[:action].to_sym ))
+				  ) && ( # Condition #
+					eval( field[:visible][:condition] )
+				  )
+
+					   block = field[:block]
+					   block[:view] ||= 'default'
+
+					   field_content = field
+					   field_content[:model] = content[:model]
+					   field_content[:action] = content[:action]
+					   field_content[:f] = f %>
+
+					<%= render_admin_block block[:name], block[:view], field_content %>
+
+			<% end %>
+		<% end %>
+	</div>
+
+	<div class="panel-footer text-left">
+		<div class="row">
+			<div class="col-md-3"></div>
+			<div class="col-md-9">
+				<% actions = content[:footer] %>
+				<% actions.each do |action| %>
+					<%
+						block = action[:block]
+					%>
+					<%= render_admin_block block[:name], block[:view], action[:block][:content] %>
+				<% end %>
+			</div>
+		</div>
+	</div>
+<% end %>
+
+<%= inline_js(render('admin/_blocks/form_for_model/default/default.js.erb', model_class: model_class, form_model_class: form_model_class, content: content)) %>
+

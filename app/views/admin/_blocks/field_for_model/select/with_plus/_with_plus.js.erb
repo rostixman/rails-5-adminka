@@ -1,0 +1,18 @@
+/**
+ * @desc инициализация функции
+ */
+var select_with_plus__<%= id %>__init = function() {
+
+	// инициализируем переменные
+	var simple_select = $('#<%= id %>');
+
+	// инициализируем select2
+	simple_select.select2(<%= content[:select2init].html_safe %>);
+
+	/**
+	 * следим за изменением селекта
+	 **/
+	simple_select.on('change', function() { $(this).valid() });
+};
+
+select_with_plus__<%= id %>__init();

@@ -1,0 +1,155 @@
+var form_for_model_default__<%= model_class %>__init = function() {
+
+	// добавляем регулярки к валидациям
+	$.validator.addMethod(
+		"regex",
+		function(value, element, regexp) {
+			var re = new RegExp(regexp);
+			return this.optional(element) || re.test(value);
+		},
+		"Please check your input."
+	);
+
+	var separator = ',';
+	var not_ignors = '';
+	not_ignors += '.select2-simple' + separator;
+	not_ignors += '.select2-form' + separator;
+	not_ignors += '.textarea_summernote';
+
+	// валидация формы
+	$(".<%= form_model_class %>").validate({
+		ignore: ':hidden:not( ' + not_ignors + ' ), .entity-files__input, .note-dialog input',
+
+		/* @validation states + elements
+		 ------------------------------------------- */
+
+		errorClass: "state-error",
+		validClass: "state-success",
+		errorElement: "em",
+
+		/* @validation rules
+		 ------------------------------------------ */
+
+		rules: {
+			<%  content[:fields].each do |field| %>
+				<%
+					field[:visible] ||= {}
+					field[:visible][:roles] ||= []
+					field[:visible][:actions] ||= []
+					field[:visible][:condition] ||= 'true'
+				%>
+				<% if ( # Roles #
+						(field[:visible][:roles].count == 0) ||
+						(field[:visible][:roles].include?( current_user.role.name.to_sym )) ||
+						(current_user.role? :admin)
+					  ) && ( # Actions #
+						(field[:visible][:actions].count == 0) ||
+						(field[:visible][:actions].include?( content[:action].to_sym ))
+					  ) && ( # Condition #
+						eval( field[:visible][:condition] )
+					  )
+
+						field[:validates] ||= {}
+						field[:validates][:use_for] ||= {}
+						field[:validates][:use_for][:roles] ||= []
+						field[:validates][:use_for][:actions] ||= []
+						field[:validates][:use_for][:condition] ||= 'true'
+
+					   if ( # Roles #
+							(field[:validates][:use_for][:roles].count == 0) ||
+							(field[:validates][:use_for][:roles].include?( current_user.role.name.to_sym )) ||
+							(current_user.role? :admin)
+						  ) && ( # Actions #
+							(field[:validates][:use_for][:actions].count == 0) ||
+							(field[:validates][:use_for][:actions].include?( content[:action].to_sym ))
+						  ) && ( # Condition #
+							eval( field[:validates][:use_for][:condition] )
+						  )
+						%>
+
+				"<%= model_class %>[<%= field[:block][:content][:value] %>]<%= '[]' if ['field_for_model/file', 'field_for_model/multi-select'].include?(field[:block][:name]) %>": {
+				<% field[:validates][:rules].each do |key, value| %>
+					<%= key.to_s %>: <% if key.to_s == 'regex' %> "<%= value %>"<% else %><%= value %><% end %>,
+				<% end %>
+				},
+					<% end %>
+				<% end %>
+			<% end %>
+				"test": {
+					required: true
+				}
+		},
+
+		/* @validation error messages
+		 ---------------------------------------------- */
+
+		messages: {
+			<%  content[:fields].each do |field| %>
+				<% if ( # Roles #
+							(field[:visible][:roles].count == 0) ||
+							(field[:visible][:roles].include?( current_user.role.name.to_sym )) ||
+							(current_user.role? :admin)
+						  ) && ( # Actions #
+							(field[:visible][:actions].count == 0) ||
+							(field[:visible][:actions].include?( content[:action].to_sym ))
+						  ) && ( # Condition #
+							eval( field[:visible][:condition] )
+						  )
+					%>
+					<%
+						field[:validates] ||= {}
+						field[:validates][:use_for] ||= {}
+						field[:validates][:use_for][:roles] ||= []
+						field[:validates][:use_for][:actions] ||= []
+						field[:validates][:use_for][:condition] ||= 'true'
+					%>
+					<% if ( # Roles #
+							(field[:validates][:use_for][:roles].count == 0) ||
+							(field[:validates][:use_for][:roles].include?( current_user.role.name.to_sym )) ||
+							(current_user.role? :admin)
+						  ) && ( # Actions #
+							(field[:validates][:use_for][:actions].count == 0) ||
+							(field[:validates][:use_for][:actions].include?( content[:action].to_sym ))
+						  ) && ( # Condition #
+							eval( field[:validates][:use_for][:condition] )
+						  )
+						%>
+				"<%= model_class %>[<%= field[:block][:content][:value] %>]<%= '[]' if ['field_for_model/file', 'field_for_model/multi-select'].include?(field[:block][:name]) %>": {
+				<% field[:validates][:messages].each do |key, value| %>
+					<%= key.to_s %>: '<%= value %>',
+				<% end %>
+				},
+					<% end %>
+				<% end %>
+			<% end %>
+				"test": {
+					required: true
+				}
+		},
+
+		/* @validation highlighting + error placement
+		 ---------------------------------------------------- */
+
+		highlight: function(element, errorClass, validClass) {
+			$(element).closest('.field').addClass(errorClass).removeClass(validClass);
+		},
+		unhighlight: function(element, errorClass, validClass) {
+			$(element).closest('.field').removeClass(errorClass).addClass(validClass);
+		},
+		errorPlacement: function(error, element) {
+			if (element.is(":radio") || element.is(":checkbox")) {
+				element.closest('.option-group').after(error);
+			} else {
+				error.insertAfter(element.parent());
+			}
+		},
+		beforeSubmit: function(arr, $form, options) {
+			var l = Ladda.bind('.like-jquery-validate-submit', {
+				timeout: 15000
+			});
+			l.start();
+		}
+	});
+};
+
+form_for_model_default__<%= model_class %>__init();

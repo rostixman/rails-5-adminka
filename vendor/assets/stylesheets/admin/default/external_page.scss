@@ -1,0 +1,28 @@
+/*
+ *  core of theme
+ *= require admin/default/partials/core
+ *
+ *  forms
+ *= require admin/default/partials/admin-forms
+ *
+ *  ladda
+ *= require admin/default/partials/ladda.min
+ *
+ *  custom
+ *= require admin/default/partials/custom
+ */
+
+
+body {
+	&.external-page {
+		#content {
+			.panel-heading {
+				padding: 10px 0 0;
+			}
+
+			.admin-form {
+				max-width: 400px;
+			}
+		}
+	}
+}

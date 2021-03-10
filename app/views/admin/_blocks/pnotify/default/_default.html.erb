@@ -1,0 +1,5 @@
+<%
+   content[:messages] ||= []
+%>
+
+<%= inline_js(render('admin/_blocks/pnotify/default/default.js.erb', content: content)) %>

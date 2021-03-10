@@ -1,0 +1,29 @@
+<%
+   content[:class] ||= ''
+   content[:title] ||= ''
+   content[:body_class] ||= ''
+   content[:blocks] ||= []
+%>
+
+<div class="panel <%= content[:class] %>">
+	<div class="panel-heading">
+		<span class="panel-title">
+			<%= content[:title] %>
+		</span>
+	</div>
+	<div class="panel-body <%= content[:body_class] %>">
+
+		<% unless content[:blocks].empty? %>
+			<% content[:blocks].each do |block| %>
+
+				<%
+				   block[:view] ||= 'default'
+				%>
+
+				<%= render_admin_block block[:name], block[:view], block[:content] %>
+
+			<% end %>
+		<% end %>
+
+	</div>
+</div>

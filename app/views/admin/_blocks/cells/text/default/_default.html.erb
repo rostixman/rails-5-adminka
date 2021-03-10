@@ -1,0 +1,6 @@
+<%
+   content[:prefix] ||= ''
+   content[:value] ||= ''
+   content[:postfix] ||= ''
+%>
+<%= "#{content[:prefix]}#{eval(content[:value])}#{content[:postfix]}" %>

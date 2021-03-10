@@ -1,0 +1,72 @@
+<%
+
+   caption = content[:caption]
+   caption[:text] ||= ''
+
+   block = content[:block]
+   block[:content][:placeholder] ||= caption[:text]
+   block[:content][:default_value] ||= ''
+   block[:content][:preview_template] ||= 'admin/entity_files/upload'
+   block[:content][:multiple] ||= false
+
+
+   files = EntityFile.where(entity: content[:model].class.to_s,
+                            entity_id: content[:model].id,
+                            name: block[:content][:value])
+   title = ''
+   title = "Загружено файлов: #{files.count}" if files.count > 0
+
+   id = "#{content[:model].class.to_s.underscore.downcase}__#{block[:content][:value]}"
+
+%>
+<div class="entity-files__wrapper">
+	<div class="form-group">
+
+		<%= render_admin_block 'admin/_blocks/field_for_model/_label/', 'default', content, abs: true %>
+
+		<div class="col-md-9">
+			<div class="bs-component field prepend-icon append-button file entity-files">
+
+				<!-- FIELD -->
+				<span class="button btn-primary"><%= block[:content][:placeholder] %></span>
+				<%= file_field_tag "entity_files[]",
+				                   multiple: block[:content][:multiple],
+				                   id: id,
+				                   class: 'gui-file entity-files__input',
+				                   data: {
+						                   entity: content[:model].class.to_s,
+				                           entity_id: content[:model].id,
+				                           name: block[:content][:value],
+				                           multiple: block[:content][:multiple],
+				                           locale: 'ru'
+				                   } %>
+
+				<input value="<%= title %>"
+				       name="<%= content[:model].class.to_s.underscore.downcase %>[<%= block[:content][:value] %>][]"
+				       type="text"
+				       class="gui-input entity-files__title"
+				       placeholder="<%= block[:content][:placeholder] %>">
+
+				<label class="field-icon">
+					<i class="fa fa-upload"></i>
+				</label>
+
+				<%= render_admin_block 'admin/_blocks/field_for_model/_help_text/', 'default', block[:content], abs: true %>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-group previews__wrapper" style=" margin-bottom: 0;">
+		<label class="col-md-3 control-label" for="" style="padding-top: 0;"></label>
+		<div class="col-md-9 previews row">
+			<% files.each do |file| %>
+				<div class="preview-file col-md-3 mw400 ib">
+					<%= render 'admin/entity_files/upload', entity_file: file %>
+				</div>
+			<% end %>
+		</div>
+	</div>
+</div>
+<%= inline_js(render('admin/_blocks/field_for_model/file/default/default.js.erb',
+                     id: id,
+                     content: block[:content])) %>

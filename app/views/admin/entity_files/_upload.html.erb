@@ -1,0 +1,39 @@
+<%
+   entity_file ||= @entity_file
+   content_types ||= %w(image/gif image/jpeg image/pjpeg image/png)
+   preview = entity_file.file.preview_fill
+   preview = '' unless content_types.include?(entity_file.content_type)
+%>
+
+<div class="panel p6 pbn entity-file__image">
+
+	<a class="img-wrap ib <%= content_types.include?(entity_file.content_type) ? 'magnific_popup' : 'file_link' %>"
+	   href="<%= entity_file.file.url %>"
+	   style="background-image: url(<%= preview %>);"
+	   <%= 'target=_blank' unless content_types.include?(entity_file.content_type) %>>
+
+	</a>
+	<div class="row table-layout">
+		<div class="col-xs-8 pln">
+			<h6><%= entity_file.title %></h6>
+		</div>
+		<div class="col-xs-2 text-right va-m prn pln">
+
+			<a href="<%= edit_admin_entity_file_path entity_file.id, format: :html %>"
+			   class="btn btn-xs btn-default btn-bloc ladda-button modal__edit-btn just-close-window"
+			   data-effect="mfp-slideDown"
+			   data-style="slide-down">
+				<span class="ladda-label">
+					<span class="octicon octicon-pencil fs16 text-muted"></span>
+				</span>
+			</a>
+		</div>
+		<div class="col-xs-2 text-right va-m prn pln">
+
+			<a href="#" class="btn btn-xs btn-default btn-bloc entity-file__remove-btn" data-id="<%= entity_file.id %>">
+				<span class="octicon octicon-trashcan fs16 text-muted"></span>
+			</a>
+		</div>
+		<input class="hidden" type="hidden" name="files[id][]" value="<%= entity_file.id %>">
+	</div>
+</div>

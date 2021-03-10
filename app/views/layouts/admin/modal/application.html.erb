@@ -1,0 +1,27 @@
+<!-- Main Modal -->
+<div id="main-modal" class="popup-basic bg-none mfp-with-anim mfp-hide">
+
+	<div class="panel">
+		<div class="panel-heading">
+              <span class="panel-icon">
+	                <% if (yield :modal_icon).length > 0 %>
+	                    <i class="<%= yield(:modal_icon) %>"></i>
+	                <% end %>
+              </span>
+			<span class="panel-title">
+				<% if (yield :modal_title).length > 0 %>
+					<%= yield(:modal_title) %>
+				<% end %>
+			</span>
+		</div>
+		<div class="panel-body <%= yield(:panel_body_classes) %>">
+			<%= yield %>
+		</div>
+
+		<% if (yield :modal_footer).length > 0 %>
+			<%= yield(:modal_footer) %>
+		<% end %>
+	</div>
+</div>
+
+<%= yield :javascript %>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <%= render 'layouts/site/default/partials/meta' %>
+
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+
+    <%= csrf_meta_tags %>
+</head>
+<body>
+
+
+<div class="wrapper">
+    <%= render 'layouts/site/default/partials/header' %>
+
+    <%= render 'layouts/site/default/partials/menu' %>
+
+    <%= yield %>
+    <div class="reloaded"></div>
+</div>
+
+<%= render 'layouts/site/default/partials/footer' %>
+
+<%= render 'layouts/site/default/partials/analytics' %>
+</body>
+</html>

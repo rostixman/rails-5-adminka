@@ -1,0 +1,81 @@
+
+// init
+var button_success_class = '.button_delete_success';
+Ladda.bind(button_success_class);
+
+// button success
+var button_success = $(button_success_class);
+button_success.on('click', function (e) {
+	e.preventDefault();
+	e.stopPropagation();
+
+	var _this = $(this);
+	var href = _this.prop('href');
+	var row_class = _this.data('row-class');
+	var tr = $(row_class);
+
+	href = href.replace('html', 'json');
+	console.log(_this.data('method'));
+
+
+	$.ajax({
+		url: href,
+		type: _this.data('method'),
+		beforeSend: function (xhr) {
+			xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+		}
+	}).done(function (result) {
+		Ladda.stopAll();
+
+		$.magnificPopup.close({
+			items: {src: '#main-modal'}
+		});
+
+		tr.addClass('will-delete');
+		tr.find('.action a').prop('disabled', 'disabled');
+
+		new PNotify({
+			title: 'Удаление',
+			text: 'Запись удалена',
+			icon: 'fa fa-trash-o',
+			shadow: false,
+			opacity: 1,
+			addclass: 'stack_bar_top stack_bar_center',
+			type: 'info',
+			stack: { "dir1": "down",   "dir2": "right",    "push": "top", "spacing1": 0,  "spacing2": 0 },
+			width: '400px',
+			delay: 2500,
+			buttons: {
+				closer: false,
+				closer_hover: false,
+				sticker: true,
+				sticker_hover: true
+			}
+		});
+
+		setTimeout(function () {
+			var td = tr.find('td');
+
+			var height = td.height();
+			td.height(height)
+					.css('border', 0)
+					.text('')
+					.animate({padding: '0px', height: 0}, {duration: 400})
+					.promise()
+					.done(function () {
+						window.data_table.row(tr).remove().draw(false);
+					});
+		}, 250);
+
+	}).fail(function (data) {
+
+		Ladda.stopAll();
+
+		$.magnificPopup.close({
+			items: {src: '#main-modal'}
+		});
+		alert('Произошла ошибка, обратитесь к системному администратору');
+
+		console.log(data);
+	})
+});

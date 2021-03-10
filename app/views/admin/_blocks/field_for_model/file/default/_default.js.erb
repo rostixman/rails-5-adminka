@@ -1,0 +1,38 @@
+/**
+ * @desc инициализация функции
+ */
+var file_default__<%= id %>__init = function(){
+
+	// инициализируем переменные
+	var body = $('body');
+	var entity_files = $('#<%= id %>');
+
+	/**
+	 * следим за изменением поля файл
+	 **/
+	entity_files.on('change', function(e){
+		e.preventDefault();
+
+		// инициализируем переменные
+		var _this            = $(this),
+			files            = change_entity_files__title(_this),
+			count_files      = files.length,
+			wrapper          = _this.parents('.entity-files__wrapper'),
+			wrapper_previews = wrapper.find('.previews__wrapper'),
+			previews         = wrapper.find('.previews'),
+			entity           = _this.data('entity'),
+			multiple         = _this.data('multiple'),
+			entity_id        = _this.data('entity-id'),
+			name             = _this.data('name'),
+			locale           = _this.data('locale'),
+			i                = 0;
+
+		if (count_files > 0) {
+			// если изображение должно быть одно, при изменении поля удаляем имеющееся изображение
+			if (!multiple) wrapper_previews.find('.entity-file__remove-btn').click();
+			upload_to_server(files, previews, entity, entity_id, name, locale, i);
+		}
+	});
+};
+
+file_default__<%= id %>__init();

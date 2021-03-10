@@ -1,0 +1,21 @@
+<%
+   content[:prefix] ||= ''
+   content[:route] ||= false
+   content[:link] ||= '#'
+   content[:class] ||= ''
+   content[:value] ||= ''
+   content[:postfix] ||= ''
+   content[:target] ||= ''
+%>
+
+<%
+   if content[:route]
+	   link = eval(content[:link])
+   else
+	   link = content[:link]
+   end
+%>
+
+<%= link_to link, class: content[:class], target: content[:target] do %>
+	<%= "#{content[:prefix]}#{eval(content[:value])}#{content[:postfix]}" %>
+<% end %>

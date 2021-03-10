@@ -1,0 +1,36 @@
+/**
+ * @desc инициализация функции
+ */
+var textarea_summernote__<%= id %>__init = function(){
+
+	// Init Summernote Plugin
+	var textarea = $('#<%= id %>');
+
+	/**
+	 * инициализируем редактор
+	 **/
+	textarea.summernote({
+		height: <%= content[:height] %>,    //set editable area's height
+		focus: <%= content[:focus] %>,      //set focus editable area after Initialize summernote
+		toolbar: <%= content[:toolbar].html_safe %>,
+		oninit: function() {},
+		onChange: function(contents, $editable) {
+			textarea.val(textarea.code());
+			textarea.valid(); // trigger validation on this element
+		},
+		onpaste: function(e) {
+			var thisNote = $(this);
+			var updatePastedText = function(someNote){
+				var original = someNote.code();
+				var cleaned = CleanPastedHTML(original); //this is where to call whatever clean function you want. I have mine in a different file, called CleanPastedHTML.
+				someNote.code('').html(cleaned); //this sets the displayed content editor to the cleaned pasted code.
+			};
+			setTimeout(function () {
+				//this kinda sucks, but if you don't do a setTimeout,
+				//the function is called before the text is really pasted.
+				updatePastedText(thisNote);
+			}, 10);
+		}
+	});
+};
+textarea_summernote__<%= id %>__init();

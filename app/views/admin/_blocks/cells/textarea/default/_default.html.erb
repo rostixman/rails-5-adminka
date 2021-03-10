@@ -1,0 +1,7 @@
+<%
+   content[:prefix] ||= ''
+   content[:value] ||= ''
+   content[:postfix] ||= ''
+   content[:length] ||= 150
+%>
+<%= "#{content[:prefix]}" %><%= truncate_html(eval(content[:value]), length: content[:length]).html_safe %><%"#{content[:postfix]}" %>
